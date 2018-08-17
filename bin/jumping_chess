@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/jumping_chess'
+
+TURNS = Integer(ARGV[0] || 10)
+MAX_DEPTH = Integer(ARGV[1] || 1)
+STRATEGY = ARGV[2] || "minimax"
+
+state = INITIAL_STATE
+
+if ENV["PROFILE"]
+  require 'stackprof'
+  StackProf.start(mode: :cpu)
+  at_exit do
+    StackProf.stop
+    StackProf.results("#{Dir.pwd}/cpu.dump")
+  end
+end
+
+player = P1
+TURNS.times do |i|
+  best_action = player.send(STRATEGY, state, MAX_DEPTH)
+  state = state.apply(player, best_action)
+
+  puts "-" * 36
+  puts "Turn #{i+1} #{player} #{best_action.join(' => ')}"
+  puts "Score: #{P1}=#{state.score_for(P1)} #{P2}=#{state.score_for(P2)}"
+  state.show
+
+  if state.finished?
+    puts "Player #{state.winner} won!"
+    break
+  end
+
+  player = player.other
+end
