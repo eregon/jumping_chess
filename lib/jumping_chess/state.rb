@@ -1,5 +1,6 @@
 class State
   TRUFFLERUBY = RUBY_ENGINE == "truffleruby"
+  MULTIPLE_JUMPS = true
 
   attr_reader :positions
 
@@ -23,6 +24,7 @@ class State
         if pawn?(neighbor)
           if jump and empty?(jump)
             successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump)]
+            jump(player, pawn, i, jump, [pawn, jump], successors) if MULTIPLE_JUMPS
           end
         else # empty
           successors << [[pawn, neighbor], copy_with_new_pos(player, i, pawn, neighbor)]
@@ -36,6 +38,16 @@ class State
     else
       successors.sort_by { |a, s| -s.score(player) }
     end
+  end
+
+  def jump(player, pawn, i, start, visited, successors)
+    start.jump_neighbors.each { |neighbor, jump|
+      if !visited.include?(jump) and pawn?(neighbor) and empty?(jump)
+        successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump)]
+        visited << jump
+        jump(player, pawn, i, jump, visited, successors)
+      end
+    }
   end
 
   def pawn?(coord)
