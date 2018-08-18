@@ -58,6 +58,10 @@ class State
     !pawn?(coord)
   end
 
+  def valid_move?(player, move)
+    sorted_successors(player).map(&:first).include?(move)
+  end
+
   def copy_with_new_pos(player, i, old_pos, new_pos)
     score = @score + player.sign * (old_pos.distance(player.goal) - new_pos.distance(player.goal))
     copy = @positions.dup

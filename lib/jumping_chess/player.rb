@@ -23,6 +23,25 @@ class Player
     send(@strategy, state, @max_depth)
   end
 
+  def human(state, max_depth)
+    puts "Enter your move (e.g., 33 44)"
+    begin
+      print "> "
+      STDOUT.flush
+      parts = STDIN.gets.chomp.strip.split(" ")
+      raise "need 2 coordinates" unless parts.size == 2
+      move = parts.map { |coord| COORDS_BY_NAME[coord] }
+      if state.valid_move?(self, move)
+        move
+      else
+        raise "not a valid move"
+      end
+    rescue => e
+      puts e.message
+      retry
+    end
+  end
+
   def negamax(state, max_depth)
     alpha = -Float::INFINITY
     best_action = nil
