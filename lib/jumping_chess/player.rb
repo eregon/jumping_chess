@@ -14,10 +14,14 @@ class Player
     @sign = n == 1 ? +1 : -1
   end
 
-  def inspect
+  def to_s
     colorize("P#{index+1}", @color)
   end
-  alias :to_s :inspect
+
+
+  def inspect
+    "#{self} (#{@strategy.capitalize} depth=#{@max_depth})"
+  end
 
   def play(state)
     send(@strategy, state, @max_depth)
