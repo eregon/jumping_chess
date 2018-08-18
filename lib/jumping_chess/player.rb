@@ -46,6 +46,22 @@ class Player
     end
   end
 
+  def greedy(state, max_depth)
+    state.sorted_successors(self).max_by { |a, s|
+      greedy_rec(s, 1, max_depth)
+    }.first
+  end
+
+  def greedy_rec(state, depth, max_depth)
+    if depth == max_depth or state.finished?
+      state.score(self)
+    else
+      state.sorted_successors(self).max_by { |a, s|
+        greedy_rec(s, depth + 1, max_depth)
+      }.last.score(self)
+    end
+  end
+
   def negamax(state, max_depth)
     alpha = -Float::INFINITY
     best_action = nil

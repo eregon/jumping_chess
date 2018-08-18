@@ -3,12 +3,13 @@
 require_relative '../lib/jumping_chess'
 
 TURNS = Integer(ARGV[0] || 10)
-MAX_DEPTH = Integer(ARGV[1] || 1)
+MAX_DEPTH1 = Integer(ARGV[1] || 1)
 STRATEGY1 = ARGV[2] || "minimax"
 STRATEGY2 = ARGV[3] || STRATEGY1
+MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 
-p1 = Player.new(1, STRATEGY1, MAX_DEPTH)
-p2 = Player.new(2, STRATEGY2, MAX_DEPTH)
+p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
+p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
 game = Game.new(p1, p2, INITIAL_STATE)
 
 if ENV["PROFILE"]
