@@ -2,10 +2,15 @@ class Player
   attr_reader :color, :index, :sign, :goal
   attr_accessor :other
 
-  def initialize(color, n)
-    @color = color
+  COLORS = { 1 => :cyan, 2 => :yellow }
+
+  def initialize(n, strategy, max_depth)
+    @color = COLORS[n] or raise
+    @strategy = strategy
+    @max_depth = max_depth
+
     @index = n - 1
-    @goal = BOARD[n == 1 ? 0 : -1][0]
+    @goal = GOALS[@index]
     @sign = n == 1 ? +1 : -1
   end
 
@@ -13,6 +18,10 @@ class Player
     colorize("P#{index+1}", @color)
   end
   alias :to_s :inspect
+
+  def play(state)
+    send(@strategy, state, @max_depth)
+  end
 
   def negamax(state, max_depth)
     alpha = -Float::INFINITY
@@ -95,9 +104,3 @@ class Player
     [val, action]
   end
 end
-
-P1 = Player.new(:cyan, 1)
-P2 = Player.new(:yellow, 2)
-P1.other = P2
-P2.other = P1
-PLAYERS = [P1, P2]

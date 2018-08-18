@@ -6,7 +6,7 @@ class State
 
   def initialize(positions, score)
     @positions = positions
-    @score = score || compute_score
+    @score = score
   end
 
   def apply(player, action)
@@ -69,8 +69,8 @@ class State
     @score * player.sign
   end
 
-  def compute_score
-    P1.sign * score_for(P1) + P2.sign * score_for(P2)
+  def compute_score(players)
+    @score = players.sum { |player| player.sign * score_for(player) }
   end
 
   def score_for(player)
@@ -84,31 +84,11 @@ class State
   end
 
   def finished?
-    won?(P1) or won?(P2)
+    won?(0, TOP) or won?(1, BOTTOM)
   end
 
-  def won?(player)
-    @positions[player.index].all? { |c| c.distance(player.goal) < CAMP }
-  end
-
-  def winner
-    PLAYERS.find { |player| won?(player) }
-  end
-
-  def show
-    puts
-    BOARD.each_with_index { |row, y|
-      margin = '  ' * (MIDDLE_Y-y).abs
-      puts margin + row.map { |cell|
-        color = case
-        when @positions[P1.index].include?(cell)
-          P1.color
-        when @positions[P2.index].include?(cell)
-          P2.color
-        end
-        colorize(cell, color)
-      }.join('  ')
-    }
+  def won?(index, goal)
+    @positions[index].all? { |c| c.distance(goal) < CAMP }
   end
 end
 

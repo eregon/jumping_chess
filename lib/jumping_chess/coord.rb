@@ -55,6 +55,9 @@ BOARD = (0...HALF).map { |y|
 }
 BOARD.each(&:freeze).freeze
 
+TOP, BOTTOM = BOARD[0][0], BOARD[-1][0]
+GOALS = [TOP, BOTTOM]
+
 NEIGHBORS = [
   #  \       /        -
   [-1,-1], [0,-1], [+1,0],
