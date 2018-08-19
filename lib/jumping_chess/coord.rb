@@ -38,6 +38,11 @@ class Coord
     (@y - to.y).abs
   end
 
+  def distance2(to)
+    diff = @y - to.y
+    diff * diff
+  end
+
   def inspect
     "#{hepta(x)}#{hepta(y)}"
   end
