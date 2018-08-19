@@ -3,7 +3,7 @@ class Save
     @logdir = File.expand_path("../../log", __dir__)
     Dir.mkdir(@logdir) unless Dir.exist?(@logdir)
 
-    @path = "#{@logdir}/#{Time.now.strftime('%FT%H-%M-%S')}.log"
+    @path = "#{@logdir}/#{Time.now.strftime('%FT%H-%M-%S')}P#{$$}.log"
     @file = File.open(@path, File::CREAT | File::EXCL | File::WRONLY)
     @file.sync = true
   end
