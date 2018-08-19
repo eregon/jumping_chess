@@ -2,7 +2,7 @@ class Game
   attr_reader :player, :state, :action
   attr_reader :player1, :player2
 
-  def initialize(player1, player2, initial_state, first_player = player1)
+  def initialize(player1, player2, initial_state, first_player: player1, log: true)
     player1.other = player2
     player2.other = player1
 
@@ -12,6 +12,7 @@ class Game
     @state = initial_state
     @turn = 0
     @player = first_player.other
+    @save = Save.new if log
   end
 
   def turn
@@ -19,11 +20,25 @@ class Game
   end
 
   def play(player)
-    @player = player
+    action = player.play(@state)
+    apply_move(player, action)
+    action
+  end
+
+  def apply_move(player, action)
     @turn += 1
-    @action = @player.play(@state)
+    @player = player
+    @action = action
+
     @state = @state.apply(@player, @action)
-    @action
+
+    @save.record @action if @save
+  end
+
+  def load(file)
+    Save.load(file) { |action|
+      apply_move(@player.other, action)
+    }
   end
 
   def show(scores: false)
@@ -46,6 +61,10 @@ class Game
         colorize(cell, owner&.color)
       }.join('  ')
     }
+  end
+
+  def current_turn
+    @turn
   end
 
   def finished?
