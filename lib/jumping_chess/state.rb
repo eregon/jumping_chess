@@ -4,9 +4,16 @@ class State
 
   attr_reader :positions
 
-  def initialize(positions, score = compute_score(positions))
+  def initialize(positions, score = compute_score(positions), occupied = compute_occupied(positions))
     @positions = positions
     @score = score
+    @occupied = occupied
+  end
+
+  def compute_occupied(positions)
+    ALL_COORDS.map { |coord|
+      positions[0].include?(coord) || positions[1].include?(coord)
+    }
   end
 
   def apply(player, action)
@@ -51,7 +58,7 @@ class State
   end
 
   def pawn?(coord)
-    @positions[0].include?(coord) || @positions[1].include?(coord)
+    @occupied[coord.index]
   end
 
   def empty?(coord)
@@ -66,7 +73,10 @@ class State
     score = @score + player.sign * (old_pos.distance(player.goal) - new_pos.distance(player.goal))
     copy = @positions.dup
     (copy[player.index] = copy[player.index].dup)[i] = new_pos
-    State.new(copy, score)
+    occupied = @occupied.dup
+    occupied[old_pos.index] = false
+    occupied[new_pos.index] = true
+    State.new(copy, score, occupied)
   end
 
   def score(player)
