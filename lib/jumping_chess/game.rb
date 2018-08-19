@@ -33,6 +33,7 @@ class Game
   def load(file)
     Save.load(file) { |action|
       apply_move(@player.other, action)
+      show(scores: true)
     }
   end
 

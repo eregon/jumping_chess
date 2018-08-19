@@ -13,11 +13,11 @@ MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
 p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
 game = Game.new(p1, p2, INITIAL_STATE)
+game.show(scores: true)
 
 if LOAD
   game.load(LOAD)
   puts "Loaded #{LOAD}"
-  game.show(scores: true)
 end
 
 if ENV["PROFILE"]
