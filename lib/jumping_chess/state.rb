@@ -19,10 +19,10 @@ class State
   def apply(player, action)
     from, to = action
     i = @positions[player.index].index(from)
-    copy_with_new_pos(player, i, from, to)
+    copy_with_new_pos(player, i, from, to, false)
   end
 
-  def sorted_successors(player)
+  def sorted_successors(player, only_score)
     pawns = @positions[player.index]
     successors = []
 
@@ -30,11 +30,11 @@ class State
       pawn.direct_and_jump_neighbors.each { |neighbor, jump|
         if pawn?(neighbor)
           if jump and empty?(jump)
-            successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump)]
-            jump(player, pawn, i, jump, [pawn, jump], successors) if MULTIPLE_JUMPS
+            successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump, only_score)]
+            jump(player, pawn, i, jump, [pawn, jump], successors, only_score) if MULTIPLE_JUMPS
           end
         else # empty
-          successors << [[pawn, neighbor], copy_with_new_pos(player, i, pawn, neighbor)]
+          successors << [[pawn, neighbor], copy_with_new_pos(player, i, pawn, neighbor, only_score)]
         end
       }
     }
@@ -47,12 +47,12 @@ class State
     end
   end
 
-  def jump(player, pawn, i, start, visited, successors)
+  def jump(player, pawn, i, start, visited, successors, only_score)
     start.jump_neighbors.each { |neighbor, jump|
       if !visited.include?(jump) and pawn?(neighbor) and empty?(jump)
-        successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump)]
+        successors << [[pawn, jump], copy_with_new_pos(player, i, pawn, jump, only_score)]
         visited << jump
-        jump(player, pawn, i, jump, visited, successors)
+        jump(player, pawn, i, jump, visited, successors, only_score)
       end
     }
   end
@@ -66,17 +66,21 @@ class State
   end
 
   def valid_move?(player, move)
-    sorted_successors(player).map(&:first).include?(move)
+    sorted_successors(player, true).map(&:first).include?(move)
   end
 
-  def copy_with_new_pos(player, i, old_pos, new_pos)
+  def copy_with_new_pos(player, i, old_pos, new_pos, only_score)
     score = @score + player.sign * (old_pos.distance2(player.goal) - new_pos.distance2(player.goal))
-    copy = @positions.dup
-    (copy[player.index] = copy[player.index].dup)[i] = new_pos
-    occupied = @occupied.dup
-    occupied[old_pos.index] = false
-    occupied[new_pos.index] = true
-    State.new(copy, score, occupied)
+    if only_score
+      State.new(nil, score, nil)
+    else
+      copy = @positions.dup
+      (copy[player.index] = copy[player.index].dup)[i] = new_pos
+      occupied = @occupied.dup
+      occupied[old_pos.index] = false
+      occupied[new_pos.index] = true
+      State.new(copy, score, occupied)
+    end
   end
 
   def score(player)

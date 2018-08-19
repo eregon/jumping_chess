@@ -47,7 +47,7 @@ class Player
   end
 
   def greedy(state, max_depth)
-    state.sorted_successors(self).max_by { |a, s|
+    state.sorted_successors(self, 1 == max_depth).max_by { |a, s|
       greedy_rec(s, 1, max_depth)
     }.first
   end
@@ -56,7 +56,7 @@ class Player
     if depth == max_depth or state.finished?
       state.score(self)
     else
-      state.sorted_successors(self).max_by { |a, s|
+      state.sorted_successors(self, depth+1 == max_depth).max_by { |a, s|
         greedy_rec(s, depth + 1, max_depth)
       }.last.score(self)
     end
@@ -66,7 +66,7 @@ class Player
     alpha = -Float::INFINITY
     best_action = nil
 
-    state.sorted_successors(self).each do |action, s|
+    state.sorted_successors(self, 1 == max_depth).each do |action, s|
       value = -negamax_rec(s, -Float::INFINITY, -alpha, 1, max_depth, @other)
       if value > alpha
         alpha = value
@@ -81,7 +81,7 @@ class Player
     if depth == max_depth or state.finished?
       state.score(player)
     else
-      state.sorted_successors(player).each do |a,s|
+      state.sorted_successors(player, depth+1 == max_depth).each do |a,s|
         value = -negamax_rec(s, -beta, -alpha, depth+1, max_depth, player.other)
         if value >= beta
           return value
@@ -105,8 +105,8 @@ class Player
     end
     val = -Float::INFINITY
     action = nil
-    state.sorted_successors(self).each do |a,s|
-      v, _ = min_value(s, alpha, beta, depth + 1, max_depth)
+    state.sorted_successors(self, depth+1 == max_depth).each do |a,s|
+      v, _ = min_value(s, alpha, beta, depth+1, max_depth)
       if v > val
         val = v
         action = a
@@ -127,8 +127,8 @@ class Player
     end
     val = Float::INFINITY
     action = nil
-    state.sorted_successors(@other).each do |a,s|
-      v, _ = max_value(s, alpha, beta, depth + 1, max_depth)
+    state.sorted_successors(@other, depth+1 == max_depth).each do |a,s|
+      v, _ = max_value(s, alpha, beta, depth+1, max_depth)
       if v < val
         val = v
         action = a
