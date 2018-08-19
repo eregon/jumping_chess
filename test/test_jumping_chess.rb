@@ -7,7 +7,7 @@ module TestJumpingChess
       %w[00 01 11 02 12 22 03 13 23 44],
       %w[8g 7f 8f 6e 7e 8e 6d 7d 8d 8c]
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
-    state = State.new(pos, nil)
+    state = State.new(pos)
 
     (1..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state, log: false)
@@ -21,7 +21,7 @@ module TestJumpingChess
       %w[00 01 11 02 12 03 13 23 33 44],
       %w[8g 7f 8f 6e 7e 8e 6d 7d 8d 8c]
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
-    state = State.new(pos, nil)
+    state = State.new(pos)
 
     (1..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state, log: false)
@@ -35,7 +35,7 @@ module TestJumpingChess
       %w[11 23 14 15 36 57 67 77 89 8a],
       %w[8g 7f 8f 6e 7e 8e 6d 7d 8d 8c]
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
-    state = State.new(pos, nil)
+    state = State.new(pos)
 
     [1].each do |max_depth|
       game = Game.new(*players(max_depth), state, log: false)
@@ -48,7 +48,7 @@ module TestJumpingChess
       %w[00 01 11 02 12 22 03 23 33 44],
       %w[8g 7f 8f 6e 7e 8e 5d 7d 8d 8c]
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
-    state0 = State.new(pos, nil)
+    state0 = State.new(pos)
 
     (3..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)
@@ -66,7 +66,7 @@ module TestJumpingChess
       %w[00 01 11 02 12 22 03 23 33 44],
       %w[8g 7f 8f 6e 7e 8e 6d 7d 8d 8c]
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
-    state0 = State.new(pos, nil)
+    state0 = State.new(pos)
 
     (5..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)

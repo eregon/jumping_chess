@@ -5,10 +5,9 @@ class Game
   def initialize(player1, player2, initial_state, first_player: player1, log: true)
     player1.other = player2
     player2.other = player1
+    raise unless player1.sign == +1 and player2.sign == -1
 
     @players = (@player1, @player2 = player1, player2)
-    initial_state.compute_score(@players)
-
     @state = initial_state
     @turn = 0
     @player = first_player.other
@@ -41,7 +40,7 @@ class Game
     puts "-" * 36
     puts "Turn #{@turn} #{@player} #{@action.join(' => ')}" if @action
     if scores
-      puts "Score: " + @players.map { |player| "#{player}=#{@state.score_for(player)}" }.join(" ")
+      puts "Score: " + @players.map { |player| "#{player}=#{@state.score_of(player)}" }.join(" ")
     end
     show_board
   end

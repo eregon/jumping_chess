@@ -4,7 +4,7 @@ class State
 
   attr_reader :positions
 
-  def initialize(positions, score)
+  def initialize(positions, score = compute_score(positions))
     @positions = positions
     @score = score
   end
@@ -73,17 +73,21 @@ class State
     @score * player.sign
   end
 
-  def compute_score(players)
-    @score = players.sum { |player| player.sign * score_for(player) }
+  def compute_score(positions)
+    score_for(positions, 0, TOP) - score_for(positions, 1, BOTTOM)
   end
 
-  def score_for(player)
-    -distance_left_for(player)
+  def score_of(player)
+    score_for(@positions, player.index, player.goal)
   end
 
-  def distance_left_for(player)
-    @positions[player.index].sum { |c|
-      c.distance(player.goal)
+  def score_for(positions, index, goal)
+    -distance_left_for(positions, index, goal)
+  end
+
+  def distance_left_for(positions, index, goal)
+    positions[index].sum { |c|
+      c.distance(goal)
     }
   end
 
@@ -99,4 +103,4 @@ end
 INITIAL_STATE = State.new([
   BOARD[-CAMP..-1].reverse.reduce(:+),
   BOARD[0...CAMP].reduce(:+),
-], nil)
+])
