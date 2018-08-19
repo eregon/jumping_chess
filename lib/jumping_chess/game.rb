@@ -39,7 +39,7 @@ class Game
 
   def show(scores: false)
     puts "-" * 36
-    puts "Turn #{@turn} #{@player} #{@action.join(' => ')}"
+    puts "Turn #{@turn} #{@player} #{@action.join(' => ')}" if @action
     if scores
       puts "Score: " + @players.map { |player| "#{player}=#{@state.score_for(player)}" }.join(" ")
     end
