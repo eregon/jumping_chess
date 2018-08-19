@@ -29,8 +29,8 @@ if ENV["PROFILE"]
   end
 end
 
-while game.current_turn < TURNS and !game.finished?
-  game.turn
+while game.turn < TURNS and !game.finished?
+  game.play
   game.show(scores: true)
 end
 

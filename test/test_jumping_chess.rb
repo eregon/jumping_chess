@@ -11,7 +11,7 @@ module TestJumpingChess
 
     (1..5).each do |max_depth|
       game = Game.new(*players(max_depth), state, log: false)
-      assert_action(game, game.turn, 44 => 33)
+      assert_action(game, game.play, 44 => 33)
       assert_same(game.player1, game.winner)
     end
   end
@@ -26,9 +26,9 @@ module TestJumpingChess
     (3..5).each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)
 
-      assert_action(game, game.turn, 33 => 13)
-      game.turn
-      assert_action(game, game.turn, 44 => 33)
+      assert_action(game, game.play, 33 => 13)
+      game.play
+      assert_action(game, game.play, 44 => 33)
 
       assert_same(game.player1, game.winner)
     end
@@ -43,7 +43,7 @@ module TestJumpingChess
 
     [5].each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)
-      game.turn until game.finished?
+      game.play until game.finished?
       assert_same(game.player1, game.winner)
     end
   end

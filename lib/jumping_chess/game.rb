@@ -1,5 +1,5 @@
 class Game
-  attr_reader :player, :state, :action
+  attr_reader :turn, :player, :action, :state
   attr_reader :player1, :player2
 
   def initialize(player1, player2, initial_state, first_player: player1, log: true)
@@ -15,11 +15,7 @@ class Game
     @save = Save.new if log
   end
 
-  def turn
-    play(@player.other)
-  end
-
-  def play(player)
+  def play(player = @player.other)
     action = player.play(@state)
     apply_move(player, action)
     action
@@ -61,10 +57,6 @@ class Game
         colorize(cell, owner&.color)
       }.join('  ')
     }
-  end
-
-  def current_turn
-    @turn
   end
 
   def finished?
