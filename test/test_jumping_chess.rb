@@ -9,7 +9,7 @@ module TestJumpingChess
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
     state = State.new(pos, nil)
 
-    (1..5).each do |max_depth|
+    (1..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state, log: false)
       assert_action(game, game.play, 44 => 33)
       assert_same(game.player1, game.winner)
@@ -23,7 +23,7 @@ module TestJumpingChess
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
     state0 = State.new(pos, nil)
 
-    (3..5).each do |max_depth|
+    (3..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)
 
       assert_action(game, game.play, 33 => 13)
@@ -41,7 +41,7 @@ module TestJumpingChess
     ].map { |row| row.map { |name| COORDS_BY_NAME[name] } }
     state0 = State.new(pos, nil)
 
-    [5].each do |max_depth|
+    (5..@max_depth).each do |max_depth|
       game = Game.new(*players(max_depth), state0, log: false)
       game.play until game.finished?
       assert_same(game.player1, game.winner)
@@ -68,6 +68,7 @@ class TestMinimax < Test::Unit::TestCase
   include TestJumpingChess
   def setup
     @strategy = "minimax"
+    @max_depth = 5
   end
 end
 
@@ -75,5 +76,14 @@ class TestNegamax < Test::Unit::TestCase
   include TestJumpingChess
   def setup
     @strategy = "negamax"
+    @max_depth = 5
+  end
+end
+
+class TestGreedy < Test::Unit::TestCase
+  include TestJumpingChess
+  def setup
+    @strategy = "greedy"
+    @max_depth = 3
   end
 end
