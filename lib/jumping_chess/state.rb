@@ -39,7 +39,9 @@ class State
       }
     }
 
-    if TRUFFLERUBY
+    if only_score
+      successors
+    elsif TRUFFLERUBY
       # Faster on TruffleRuby, slower on CRuby
       successors.sort { |(a1,s1),(a2,s2)| s2.score(player) - s1.score(player) }
     else
