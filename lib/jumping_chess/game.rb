@@ -1,5 +1,5 @@
 class Game
-  DIAMOND = false
+  DIAMOND = true
 
   attr_reader :turn, :player, :action, :state
   attr_reader :player1, :player2
