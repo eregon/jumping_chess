@@ -1,4 +1,6 @@
 class Game
+  DIAMOND = false
+
   attr_reader :turn, :player, :action, :state
   attr_reader :player1, :player2
 
@@ -56,6 +58,7 @@ class Game
         }
         colorize(cell, owner&.color)
       }.join('  ')
+      puts if DIAMOND
     }
   end
 
