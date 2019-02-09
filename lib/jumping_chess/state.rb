@@ -72,7 +72,7 @@ class State
   end
 
   def copy_with_new_pos(player, i, old_pos, new_pos, only_score)
-    score = @score + player.sign * (old_pos.distance(player.goal) - new_pos.distance(player.goal))
+    score = @score + player.sign * (old_pos.distance2(player.goal) - new_pos.distance2(player.goal))
     if only_score
       State.new(nil, score, nil)
     else
@@ -103,7 +103,7 @@ class State
 
   def distance_left_for(positions, index, goal)
     positions[index].sum { |c|
-      c.distance(goal)
+      c.distance2(goal)
     }
   end
 
