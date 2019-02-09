@@ -12,7 +12,7 @@ MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 
 p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
 p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
-game = Game.new(p1, p2, INITIAL_STATE)
+game = Game.new(p1, p2, INITIAL_STATE, first_player: p2)
 game.show(scores: true)
 
 if LOAD
