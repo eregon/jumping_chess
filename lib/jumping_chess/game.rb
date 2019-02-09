@@ -49,14 +49,28 @@ class Game
   end
 
   def show_board
+    if @action
+      last_state = state.undo(@player, @action)
+      from, *path, to = last_state.path(@player, @action)
+    end
     puts
     BOARD.each_with_index { |row, y|
       margin = '  ' * (MIDDLE_Y-y).abs
       puts margin + row.map { |cell|
-        owner = @players.find { |player|
-          @state.positions[player.index].include?(cell)
-        }
-        colorize(cell, owner&.color)
+        color = case cell
+        when from
+          :bright_red
+        when to
+          :bright_green
+        when *path
+          :bright_blue
+        else
+          owner = @players.find { |player|
+            @state.positions[player.index].include?(cell)
+          }
+          owner&.color
+        end
+        colorize(cell, color)
       }.join('  ')
       puts if DIAMOND
     }

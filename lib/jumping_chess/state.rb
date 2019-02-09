@@ -22,6 +22,10 @@ class State
     copy_with_new_pos(player, i, from, to, false)
   end
 
+  def undo(player, action)
+    apply(player, action.reverse)
+  end
+
   def sorted_successors(player, only_score)
     pawns = @positions[player.index]
     successors = []
@@ -57,6 +61,33 @@ class State
         jump(player, pawn, i, jump, visited, successors, only_score)
       end
     }
+  end
+
+  def path(player, action)
+    from, to = action
+
+    if from.direct_neighbors.include?(to)
+      return [from, to]
+    end
+
+    dist = Hash.new(Float::INFINITY)
+    dist[from] = 0
+    prev = {}
+    q = [from]
+    while cell = q.shift
+      d = dist[cell]
+      cell.jump_neighbors.each { |neighbor, jump|
+        if pawn?(neighbor) and empty?(jump) and d + 1 < dist[jump]
+          dist[jump] = d + 1
+          prev[jump] = cell
+          break if jump == to
+          q << jump
+        end
+      }
+    end
+    path = [to]
+    path << prev[path.last] until path.last == from
+    path.reverse
   end
 
   def pawn?(coord)
