@@ -1,6 +1,6 @@
 class Save
   def initialize
-    @logdir = File.expand_path("../../log", __dir__)
+    @logdir = File.expand_path("../../../log", __FILE__)
     Dir.mkdir(@logdir) unless File.directory?(@logdir)
 
     if RUBY_ENGINE == "mruby"

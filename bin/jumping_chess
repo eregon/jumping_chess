@@ -1,10 +1,5 @@
 #!/usr/bin/env ruby
 
-if RUBY_ENGINE == "mruby"
-  path = File.expand_path("../../mruby_shims.rb", __FILE__)
-  eval File.read(path), nil, path
-end
-
 require_relative '../lib/jumping_chess'
 
 LOAD = (ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil

@@ -1,6 +1,4 @@
 if RUBY_ENGINE == "mruby"
-  path = File.expand_path("../../mruby_shims.rb", __FILE__)
-  eval File.read(path), nil, path
   Test = MTest
 else
   require 'test/unit'
