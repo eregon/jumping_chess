@@ -3,4 +3,5 @@ MRuby::Build.new do |conf|
 
   conf.gembox 'default'
   conf.gem core: 'mruby-eval'
+  conf.gem github: 'iij/mruby-mtest'
 end
