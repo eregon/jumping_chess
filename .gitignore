@@ -1,2 +1,5 @@
 *.dump
 *.log
+
+/bin/mruby
+/mruby

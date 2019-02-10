@@ -1,10 +1,15 @@
 class Save
   def initialize
     @logdir = File.expand_path("../../log", __dir__)
-    Dir.mkdir(@logdir) unless Dir.exist?(@logdir)
+    Dir.mkdir(@logdir) unless File.directory?(@logdir)
 
-    @path = "#{@logdir}/#{Time.now.strftime('%FT%H-%M-%S')}P#{$$}.log"
-    @file = File.open(@path, File::CREAT | File::EXCL | File::WRONLY)
+    if RUBY_ENGINE == "mruby"
+      @path = "#{@logdir}/#{Time.now}R#{rand(1<<16)}.log"
+      @file = File.open(@path, "w")
+    else
+      @path = "#{@logdir}/#{Time.now.strftime('%FT%H-%M-%S')}P#{$$}.log"
+      @file = File.open(@path, File::CREAT | File::EXCL | File::WRONLY)
+    end
     @file.sync = true
   end
 
