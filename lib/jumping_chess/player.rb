@@ -32,13 +32,32 @@ class Player
     begin
       print "> "
       STDOUT.flush
-      parts = STDIN.gets.chomp.strip.split(" ")
-      raise "need 2 coordinates" unless parts.size == 2
-      move = parts.map { |coord| COORDS_BY_NAME[coord] }
-      if state.valid_move?(self, move)
-        move
+      command = (STDIN.gets || "exit").chomp.strip
+      parts = command.split(" ")
+      case parts.first
+      when "exit"
+        exit
+      when "s", "suggest"
+        parts << @suggest_strategy if parts.size == 1 and @suggest_strategy
+        parts << @suggest_depth if parts.size == 2 and @suggest_depth
+        raise "need strategy and max depth" unless parts.size == 3
+        @max_depth = @suggest_depth = Integer(parts[2])
+        @strategy = @suggest_strategy = parts[1]
+        begin
+          action = play(state)
+        ensure
+          @strategy = :human
+        end
+        puts "#{@suggest_strategy} #{@suggest_depth} would play #{action.join(' => ')}"
+        raise ""
       else
-        raise "not a valid move"
+        raise "need 2 coordinates" unless parts.size == 2
+        move = parts.map { |coord| COORDS_BY_NAME[coord] }
+        if state.valid_move?(self, move)
+          move
+        else
+          raise "not a valid move"
+        end
       end
     rescue => e
       puts e.message
