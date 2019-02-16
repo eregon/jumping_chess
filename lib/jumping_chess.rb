@@ -1,6 +1,7 @@
 MRUBY = RUBY_ENGINE == "mruby"
+WASM = MRUBY && MRUBY_PLATFORM == 'wasm'
 
-if RUBY_ENGINE == 'mruby'
+if MRUBY
   module Kernel
     def require(feature)
     end
