@@ -2,11 +2,9 @@
 
 require_relative '../lib/jumping_chess'
 
-WASM = RUBY_ENGINE == 'mruby' # TODO: better check
-
 ARGV = [] unless Object.const_defined?(:ARGV)
 
-LOAD = (ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
+LOAD = (Object.const_defined?(:File) and ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
 
 TURNS = Integer(ARGV[0] || 10)
 MAX_DEPTH1 = Integer(ARGV[1] || 1)
@@ -16,7 +14,7 @@ MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 
 p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
 p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
-game = Game.new(p1, p2, INITIAL_STATE, first_player: p2, log: !WASM)
+game = Game.new(p1, p2, INITIAL_STATE, first_player: p2, log: !MRUBY)
 game.show(scores: true)
 
 if LOAD

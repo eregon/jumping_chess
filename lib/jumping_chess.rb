@@ -1,3 +1,5 @@
+MRUBY = RUBY_ENGINE == "mruby"
+
 if RUBY_ENGINE == 'mruby'
   module Kernel
     def require(feature)
