@@ -1,10 +1,18 @@
 COLORS = %i[
   black red green yellow blue purple cyan white
 ]
-NORMAL = COLORS.map.with_index { |c,i| [c, "\e[#{30+i}m"] }
-BRIGHT = COLORS.map.with_index { |c,i| [:"bright_#{c}", "\e[#{30+i};1m"] }
+
+if WASM
+  NORMAL = COLORS.map.with_index { |c,i| [c, "<span style='color: #{c}'>"] }
+  BRIGHT = COLORS.map.with_index { |c,i| [:"bright_#{c}", "<span style='color: #{c}; font-weight: bold;'>"] }
+  RESET_COLOR = "</span>"
+else
+  NORMAL = COLORS.map.with_index { |c,i| [c, "\e[#{30+i}m"] }
+  BRIGHT = COLORS.map.with_index { |c,i| [:"bright_#{c}", "\e[#{30+i};1m"] }
+  RESET_COLOR = "\e[0m"
+end
+
 ALL_COLORS = (NORMAL + BRIGHT).to_h
-RESET_COLOR = "\e[0m"
 
 def colorize(text, color)
   if color
