@@ -1,13 +1,9 @@
-def add_gems(conf)
-  conf.gembox 'default'
-  conf.gem __dir__
-  conf.gem github: 'iij/mruby-mtest'
-end
-
 MRuby::Build.new do |conf|
   toolchain :gcc
 
-  add_gems(conf)
+  conf.gem __dir__
+  conf.gem core: 'mruby-bin-mruby'
+  conf.gem github: 'iij/mruby-mtest'
 end
 
 if system("which emcc", err: File::NULL, out: File::NULL)
@@ -18,6 +14,6 @@ if system("which emcc", err: File::NULL, out: File::NULL)
     conf.linker.command = 'emcc'
     conf.archiver.command = 'emar'
 
-    add_gems(conf)
+    conf.gem __dir__
   end
 end
