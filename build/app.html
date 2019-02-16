@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>Jumping Chess</title>
+  </head>
+  <body>
+    <pre id="output" style="color: white; background-color: black;"></pre>
+
+    <script type='text/javascript'>
+      var output = document.getElementById('output');
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          output.innerHTML += text + "\n";
+        },
+        printErr: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          console.error(text);
+        },
+      };
+    </script>
+    <script async type="text/javascript" src="app.js"></script>
+  </body>
+</html>
