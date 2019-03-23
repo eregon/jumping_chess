@@ -32,5 +32,5 @@ end
 task :clean do
   sh "cd mruby && git clean -Xdf"
   rm_f "bin/mruby"
-  rm_rf "build"
+  sh "cd build && git clean -Xdf"
 end

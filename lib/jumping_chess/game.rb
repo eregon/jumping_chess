@@ -2,7 +2,8 @@ class Game
   attr_reader :turn, :player, :action, :players, :state, :ui
   attr_reader :player1, :player2
 
-  def initialize(player1, player2, initial_state, first_player: player1, log: true, ui: TextUI)
+  def initialize(player1, player2, initial_state, first_player: player1,
+                 log: !MRUBY, ui: WASM ? HTMLUI : TextUI)
     player1.other = player2
     player2.other = player1
     raise unless player1.sign == +1 and player2.sign == -1
@@ -39,9 +40,7 @@ class Game
   end
 
   def show
-    @ui.show_turn
-    @ui.show_scores
-    @ui.show_board
+    @ui.show
   end
 
   def finished?

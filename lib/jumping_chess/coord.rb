@@ -23,6 +23,8 @@ HALF = 9
 MIDDLE_Y = 8
 
 class Coord
+  COS60 = Math.cos(Math::PI / 3)
+
   attr_reader :x, :y
   attr_accessor :index, :direct_neighbors, :jump_neighbors, :direct_and_jump_neighbors
 
@@ -41,6 +43,14 @@ class Coord
   def distance2(to)
     diff = @y - to.y
     diff * diff
+  end
+
+  def dx
+    (MIDDLE_Y - @y + 2 * @x) * COS60
+  end
+
+  def dy
+    @y
   end
 
   def inspect

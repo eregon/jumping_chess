@@ -3,8 +3,13 @@ COLORS = %i[
 ]
 
 if WASM
-  NORMAL = COLORS.map.with_index { |c,i| [c, "<span style='color: #{c}'>"] }
-  BRIGHT = COLORS.map.with_index { |c,i| [:"bright_#{c}", "<span style='color: #{c}; font-weight: bold;'>"] }
+  COLOR_MAPPINGS = {
+    cyan: "deepskyblue",
+    yellow: "orange",
+    nil => "silver",
+  }
+  NORMAL = COLORS.map.with_index { |c,i| [c, "<span style='color: #{COLOR_MAPPINGS[c] || c}'>"] }
+  BRIGHT = COLORS.map.with_index { |c,i| [:"bright_#{c}", "<span style='color: #{COLOR_MAPPINGS[c] || c}; font-weight: bold;'>"] }
   RESET_COLOR = "</span>"
 else
   NORMAL = COLORS.map.with_index { |c,i| [c, "\e[#{30+i}m"] }

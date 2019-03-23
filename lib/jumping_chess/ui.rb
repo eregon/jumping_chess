@@ -1,8 +1,16 @@
-class TextUI
-  DIAMOND = true
-
+class UI
   def initialize(game)
     @game = game
+  end
+end
+
+class TextUI < UI
+  DIAMOND = true
+
+  def show
+    show_turn
+    show_scores
+    show_board
   end
 
   def show_turn
@@ -24,8 +32,8 @@ class TextUI
     puts
     BOARD.each_with_index { |row, y|
       margin = '  ' * (MIDDLE_Y-y).abs
-      puts margin + row.map { |cell|
-        color = case cell
+      puts margin + row.map { |coord|
+        color = case coord
         when from
           :bright_red
         when to
@@ -34,13 +42,72 @@ class TextUI
           :bright_blue
         else
           owner = @game.players.find { |player|
-            @game.state.positions[player.index].include?(cell)
+            @game.state.positions[player.index].include?(coord)
           }
           owner&.color
         end
-        colorize(cell, color)
+        colorize(coord, color)
       }.join('  ')
       puts if DIAMOND
     }
+  end
+end
+
+class HTMLUI < UI
+  WIDTH = 400
+  HEIGHT = 350
+  MARGIN = 10
+  DV = 20
+  R = 7
+
+  def show
+    header = "Turn #{@game.turn} #{@game.player}"
+    header << " #{@game.action.join(' => ')}" if @game.action
+    puts "<p>#{header}</p>"
+    puts %Q{<svg height="#{HEIGHT}" width="#{WIDTH}">}
+
+    BOARD.each_with_index { |row, y|
+      margin = (MIDDLE_Y-y).abs
+      row.each_with_index { |coord, x|
+        owner = @game.players.find { |player|
+          @game.state.positions[player.index].include?(coord)
+        }
+        color = owner&.color
+        color = COLOR_MAPPINGS[color] || color
+
+        puts pawn(coord, color)
+      }
+    }
+
+    if @game.action
+      last_state = @game.state.undo(@game.player, @game.action)
+      path = last_state.path(@game.player, @game.action)
+      puts polyline(path, :black)
+    end
+
+    puts "</svg>"
+    puts "FLUSH"
+  end
+
+  def tx(coord)
+    MARGIN + coord.dx * DV
+  end
+
+  def ty(coord)
+    MARGIN + coord.dy * DV
+  end
+
+  def pawn(coord, color)
+    xml('circle', cx: tx(coord), cy: ty(coord), r: R, 'stroke-width': 0, stroke: color, fill: color)
+  end
+
+  def polyline(path, color)
+    xml('polyline', points: path.map { |c| "#{tx(c)},#{ty(c)}" }.join(' '),
+                    style: "stroke: #{color}; stroke-width: 2; fill: none")
+  end
+
+  def xml(tag, options = {})
+    options = options.map { |k,v| "#{k}=#{v.to_s.inspect}" }.join(' ')
+    "<#{tag} #{options}>#{yield if block_given?}</#{tag}>"
   end
 end

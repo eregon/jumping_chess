@@ -5,16 +5,22 @@
     <title>Jumping Chess</title>
   </head>
   <body>
-    <pre id="output" style="color: white; background-color: black;"></pre>
+    <div id="output">Loading...</div>
 
     <script type='text/javascript'>
       var output = document.getElementById('output');
+      var buffer = "";
       var Module = {
         preRun: [],
         postRun: [],
         print: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-          output.innerHTML += text + "\n";
+          if (text == "FLUSH") {
+            output.innerHTML += buffer;
+            buffer = "";
+          } else {
+            buffer += text;
+          }
         },
         printErr: function(text) {
           if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
