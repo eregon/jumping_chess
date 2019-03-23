@@ -1,10 +1,8 @@
 class Game
-  DIAMOND = true
-
-  attr_reader :turn, :player, :action, :state
+  attr_reader :turn, :player, :action, :players, :state, :ui
   attr_reader :player1, :player2
 
-  def initialize(player1, player2, initial_state, first_player: player1, log: true)
+  def initialize(player1, player2, initial_state, first_player: player1, log: true, ui: TextUI)
     player1.other = player2
     player2.other = player1
     raise unless player1.sign == +1 and player2.sign == -1
@@ -14,6 +12,7 @@ class Game
     @turn = 0
     @player = first_player.other
     @save = Save.new if log
+    @ui = ui.new(self)
   end
 
   def play(player = @player.other)
@@ -35,45 +34,14 @@ class Game
   def load(file)
     Save.load(file) { |action|
       apply_move(@player.other, action)
-      show(scores: true)
+      show
     }
   end
 
-  def show(scores: false)
-    puts "-" * 36
-    puts "Turn #{@turn} #{@player} #{@action.join(' => ')}" if @action
-    if scores
-      puts "Score: " + @players.map { |player| "#{player}=#{@state.score_of(player)}" }.join(" ")
-    end
-    show_board
-  end
-
-  def show_board
-    if @action
-      last_state = state.undo(@player, @action)
-      from, *path, to = last_state.path(@player, @action)
-    end
-    puts
-    BOARD.each_with_index { |row, y|
-      margin = '  ' * (MIDDLE_Y-y).abs
-      puts margin + row.map { |cell|
-        color = case cell
-        when from
-          :bright_red
-        when to
-          :bright_green
-        when *path
-          :bright_blue
-        else
-          owner = @players.find { |player|
-            @state.positions[player.index].include?(cell)
-          }
-          owner&.color
-        end
-        colorize(cell, color)
-      }.join('  ')
-      puts if DIAMOND
-    }
+  def show
+    @ui.show_turn
+    @ui.show_scores
+    @ui.show_board
   end
 
   def finished?

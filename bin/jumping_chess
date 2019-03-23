@@ -15,7 +15,7 @@ MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
 p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
 game = Game.new(p1, p2, INITIAL_STATE, first_player: p2, log: !MRUBY)
-game.show(scores: true)
+game.show
 
 if LOAD
   game.load(LOAD)
@@ -33,7 +33,7 @@ end
 
 while game.turn < TURNS and !game.finished?
   game.play
-  game.show(scores: true)
+  game.show
 end
 
 if game.finished?
