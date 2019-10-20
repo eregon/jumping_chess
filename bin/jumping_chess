@@ -8,7 +8,7 @@ LOAD = (Object.const_defined?(:File) and ARGV[0] and File.exist?(ARGV[0])) ? ARG
 
 TURNS = Integer(ARGV[0] || 10)
 MAX_DEPTH1 = Integer(ARGV[1] || 1)
-STRATEGY1 = ARGV[2] || "minimax"
+STRATEGY1 = ARGV[2] || "negamax"
 STRATEGY2 = ARGV[3] || STRATEGY1
 MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
 
