@@ -7,6 +7,9 @@ task :compile_wasm => [:compile_mruby, "build"] do
     sh "cat mruby_main.c >> #{app}"
     sh "emcc", "-s", "WASM=1", "-Imruby/include", "-o", "build/app.js",
       app, "mruby/build/emscripten/lib/libmruby.a"
+  else
+    puts "emcc not available, skipping WASM build."
+    puts "'source ~/code/emsdk/emsdk_env.sh' should add emcc in PATH"
   end
 end
 
