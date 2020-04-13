@@ -4,6 +4,4 @@
 /bin/mruby
 /mruby
 
-/build/app.c
-/build/app.js
-/build/app.wasm
+/build

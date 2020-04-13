@@ -5,7 +5,11 @@ task :compile_wasm => [:compile_mruby, "build"] do
     app = "build/app.c"
     sh "mruby/build/host/bin/mrbc", "-Bruby_app", "-o", app, "bin/jumping_chess"
     sh "cat mruby_main.c >> #{app}"
-    sh "emcc", "-s", "WASM=1", "-Imruby/include", "-o", "build/app.js",
+    sh "emcc",
+      "-s", "WASM=1",
+      "-I", "mruby/include",
+      "--shell-file", "template.html",
+      "-o", "build/app.html",
       app, "mruby/build/emscripten/lib/libmruby.a"
   else
     puts "emcc not available, skipping WASM build."
