@@ -2,22 +2,22 @@
 
 require_relative '../lib/jumping_chess'
 
-LOAD = (ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
+load = (ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
 
-TURNS = Integer(ARGV[0] || 10)
-MAX_DEPTH1 = Integer(ARGV[1] || 1)
-STRATEGY1 = ARGV[2] || "negamax"
-STRATEGY2 = ARGV[3] || STRATEGY1
-MAX_DEPTH2 = Integer(ARGV[4] || MAX_DEPTH1)
+turns = Integer(ARGV[0] || 10)
+max_depth1 = Integer(ARGV[1] || 1)
+strategy1 = ARGV[2] || "negamax"
+strategy2 = ARGV[3] || strategy1
+max_depth2 = Integer(ARGV[4] || max_depth1)
 
-p1 = Player.new(1, STRATEGY1, MAX_DEPTH1)
-p2 = Player.new(2, STRATEGY2, MAX_DEPTH2)
+p1 = Player.new(1, strategy1, max_depth1)
+p2 = Player.new(2, strategy2, max_depth2)
 game = Game.new(p1, p2, INITIAL_STATE, first_player: p2)
 game.show
 
-if LOAD
-  game.load(LOAD)
-  puts "Loaded #{LOAD}"
+if load
+  game.load(load)
+  puts "Loaded #{load}"
 end
 
 if ENV["PROFILE"]
@@ -29,7 +29,7 @@ if ENV["PROFILE"]
   end
 end
 
-while game.turn < TURNS and !game.finished?
+while game.turn < turns and !game.finished?
   game.play
   game.show
 end
