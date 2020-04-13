@@ -2,9 +2,7 @@
 
 require_relative '../lib/jumping_chess'
 
-ARGV = [] unless Object.const_defined?(:ARGV)
-
-LOAD = (Object.const_defined?(:File) and ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
+LOAD = (ARGV[0] and File.exist?(ARGV[0])) ? ARGV.shift : nil
 
 TURNS = Integer(ARGV[0] || 10)
 MAX_DEPTH1 = Integer(ARGV[1] || 1)

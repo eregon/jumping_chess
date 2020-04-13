@@ -2,6 +2,8 @@ MRuby::Gem::Specification.new('mruby-jumping-chess') do |spec|
   spec.license = 'MIT'
   spec.author  = 'Benoit Daloze'
 
+  spec.rbfiles.unshift("#{spec.dir}/mruby_shims.rb")
+
   spec.add_dependency 'mruby-kernel-ext'
   spec.add_dependency 'mruby-string-ext'
   spec.add_dependency 'mruby-numeric-ext'
