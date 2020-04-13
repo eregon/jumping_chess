@@ -50,4 +50,16 @@ class Game
   def winner
     @players.find { |player| @state.won?(player.index, player.goal) }
   end
+
+  def run(turns = 1)
+    while @turn < turns
+      if finished?
+        puts "Player #{winner.inspect} won!"
+        break
+      end
+
+      play
+      show
+    end
+  end
 end
