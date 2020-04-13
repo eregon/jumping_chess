@@ -61,13 +61,14 @@ class HTMLUI < UI
   R = 7
 
   def show
+    out = ""
+
     header = "Turn #{@game.turn} #{@game.player}"
     header << " #{@game.action.join(' => ')}" if @game.action
-    puts "<p>#{header}</p>"
-    puts %Q{<svg height="#{HEIGHT}" width="#{WIDTH}">}
+    out << "<p>#{header}</p>"
+    out << %Q{<svg height="#{HEIGHT}" width="#{WIDTH}">}
 
     BOARD.each_with_index { |row, y|
-      margin = (MIDDLE_Y-y).abs
       row.each_with_index { |coord, x|
         owner = @game.players.find { |player|
           @game.state.positions[player.index].include?(coord)
@@ -75,18 +76,18 @@ class HTMLUI < UI
         color = owner&.color
         color = COLOR_MAPPINGS[color] || color
 
-        puts pawn(coord, color)
+        out << pawn(coord, color)
       }
     }
 
     if @game.action
       last_state = @game.state.undo(@game.player, @game.action)
       path = last_state.path(@game.player, @game.action)
-      puts polyline(path, :black)
+      out << polyline(path, :black)
     end
 
-    puts "</svg>"
-    puts "FLUSH"
+    out << "</svg>"
+    out
   end
 
   def tx(coord)
@@ -98,7 +99,7 @@ class HTMLUI < UI
   end
 
   def pawn(coord, color)
-    xml('circle', cx: tx(coord), cy: ty(coord), r: R, 'stroke-width': 0, stroke: color, fill: color)
+    xml('circle', cx: tx(coord), cy: ty(coord), r: R, :'stroke-width' => 0, stroke: color, fill: color)
   end
 
   def polyline(path, color)

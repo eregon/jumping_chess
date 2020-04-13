@@ -7,6 +7,7 @@ task :compile_wasm => [:compile_mruby, "build"] do
     sh "cat mruby_main.c >> #{app}"
     sh "emcc",
       "-s", "WASM=1",
+      "-s", "EXTRA_EXPORTED_RUNTIME_METHODS=['cwrap']",
       "-I", "mruby/include",
       "--shell-file", "template.html",
       "-o", "build/app.html",

@@ -11,10 +11,10 @@ if ENV["PROFILE"]
   end
 end
 
-def main(argv)
+def create_game(argv = ARGV)
   load = (argv[0] and File.exist?(argv[0])) ? argv.shift : nil
 
-  turns = Integer(argv[0] || 10)
+  $turns = Integer(argv[0] || 10)
   max_depth1 = Integer(argv[1] || 1)
   strategy1 = argv[2] || "negamax"
   strategy2 = argv[3] || strategy1
@@ -30,9 +30,12 @@ def main(argv)
     puts "Loaded #{load}"
   end
 
-  game.run(turns)
+  game
 end
 
 if $0 == __FILE__
-  main(ARGV)
+  game = create_game(ARGV)
+  game.run($turns)
+else
+  self
 end

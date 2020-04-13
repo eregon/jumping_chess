@@ -47,6 +47,8 @@
       <progress value="0" max="100" id="progress" hidden=1></progress>
     </div>
     <hr/>
+    <button id="gameStep">Step</button>
+    <hr/>
     <div class="emscripten" id="output"></div>
     <hr>
     <script type='text/javascript'>
@@ -54,26 +56,23 @@
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
 
+      var createGame, gameCall, gameCallBoolean, gameCallString, cleanupGame;
+
       var Module = {
-        preRun: [],
+        preRun: [
+          () => {
+            createGame = Module.cwrap('createGame', 'number', []);
+            gameCall = Module.cwrap('gameCall', 'number', ['string']);
+            gameCallBoolean = Module.cwrap('gameCallBoolean', 'boolean', ['string']);
+            gameCallString = Module.cwrap('gameCallString', 'string', ['string']);
+            cleanupGame = Module.cwrap('cleanupGame', 'number', []);
+          }
+        ],
         postRun: [],
         print: (function() {
-          var element = document.getElementById('output');
-          var buffer = "";
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
-            // These replacements are necessary if you render to raw HTML
-            //text = text.replace(/&/g, "&amp;");
-            //text = text.replace(/</g, "&lt;");
-            //text = text.replace(/>/g, "&gt;");
-            //text = text.replace('\n', '<br>', 'g');
-            //console.log(text);
-            if (text === "FLUSH") {
-              element.innerHTML += buffer;
-              buffer = "";
-            } else {
-              buffer += text;
-            }
+            console.log(text);
           };
         })(),
         printErr: function(text) {
@@ -116,6 +115,18 @@
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
+
+      document.querySelector('#gameStep').addEventListener('click', () => {
+        if (gameCallBoolean("finished?")) {
+          return
+        }
+
+        gameCall("play")
+
+        var result = gameCallString("show")
+        var previous = document.getElementById('output').innerHTML;
+        document.getElementById('output').innerHTML = result + previous;
+      });
     </script>
     {{{ SCRIPT }}}
   </body>
