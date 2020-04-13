@@ -124,8 +124,9 @@
         gameCall("play")
 
         var result = gameCallString("show")
-        var previous = document.getElementById('output').innerHTML;
-        document.getElementById('output').innerHTML = result + previous;
+        var div = document.createElement('div')
+        div.innerHTML = result
+        document.getElementById('output').prepend(div)
       });
     </script>
     {{{ SCRIPT }}}
