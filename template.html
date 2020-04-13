@@ -58,6 +58,13 @@
 
       var createGame, gameCall, gameCallBoolean, gameCallString, cleanupGame;
 
+      function show() {
+        var result = gameCallString("show")
+        var div = document.createElement('div')
+        div.innerHTML = result
+        document.getElementById('output').prepend(div)
+      }
+
       var Module = {
         preRun: [
           () => {
@@ -68,7 +75,7 @@
             cleanupGame = Module.cwrap('cleanupGame', 'number', []);
           }
         ],
-        postRun: [],
+        postRun: [show],
         print: (function() {
           return function(text) {
             if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
@@ -122,11 +129,7 @@
         }
 
         gameCall("play")
-
-        var result = gameCallString("show")
-        var div = document.createElement('div')
-        div.innerHTML = result
-        document.getElementById('output').prepend(div)
+        show()
       });
     </script>
     {{{ SCRIPT }}}

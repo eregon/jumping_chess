@@ -23,13 +23,7 @@ def create_game(argv = ARGV)
   p1 = Player.new(1, strategy1, max_depth1)
   p2 = Player.new(2, strategy2, max_depth2)
   game = Game.new(p1, p2, INITIAL_STATE, first_player: p2)
-  game.show
-
-  if load
-    game.load(load)
-    puts "Loaded #{load}"
-  end
-
+  game.load(load) if load
   game
 end
 

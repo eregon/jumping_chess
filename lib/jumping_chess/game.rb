@@ -37,6 +37,7 @@ class Game
       apply_move(@player.other, action)
       show
     }
+    puts "Loaded #{file}"
   end
 
   def show
@@ -52,6 +53,8 @@ class Game
   end
 
   def run(turns = 1)
+    show
+
     while @turn < turns
       if finished?
         puts "Player #{winner.inspect} won!"
