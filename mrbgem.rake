@@ -8,6 +8,7 @@ spec = MRuby::Gem::Specification.new('mruby-jumping-chess') do |spec|
   spec.add_dependency 'mruby-string-ext'
   spec.add_dependency 'mruby-numeric-ext'
   spec.add_dependency 'mruby-array-ext'
+  spec.add_dependency 'mruby-enum-ext'
   spec.add_dependency 'mruby-enumerator'
   spec.add_dependency 'mruby-io'
   spec.add_dependency 'mruby-math'
