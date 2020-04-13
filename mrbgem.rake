@@ -1,4 +1,4 @@
-MRuby::Gem::Specification.new('mruby-jumping-chess') do |spec|
+spec = MRuby::Gem::Specification.new('mruby-jumping-chess') do |spec|
   spec.license = 'MIT'
   spec.author  = 'Benoit Daloze'
 
@@ -13,3 +13,6 @@ MRuby::Gem::Specification.new('mruby-jumping-chess') do |spec|
   spec.add_dependency 'mruby-math'
   spec.add_dependency 'mruby-metaprog'
 end
+
+spec.mrblib_dir = "lib"
+spec
