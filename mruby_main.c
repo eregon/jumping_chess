@@ -4,10 +4,19 @@
 #include <mruby/irep.h>
 #include <mruby/string.h>
 
-#include <emscripten/emscripten.h>
+#include <emscripten.h>
 
 static mrb_state* mrb;
 static mrb_value game;
+
+mrb_value createElement(mrb_state* mrb, mrb_value self) {
+  mrb_value name;
+  mrb_get_args(mrb, "S", &name);
+  EM_ASM({
+    alert(document.createElement(UTF8ToString($0)))
+  }, RSTRING_PTR(name));
+  return self;
+}
 
 int EMSCRIPTEN_KEEPALIVE createGame() {
   mrb = mrb_open();
@@ -17,6 +26,10 @@ int EMSCRIPTEN_KEEPALIVE createGame() {
   }
 
   mrb_value self = mrb_load_irep(mrb, ruby_app);
+
+  struct RClass* dom = mrb_define_module(mrb, "DOM");
+  mrb_define_class_method(mrb, dom, "createElement", createElement, MRB_ARGS_REQ(1));
+
   game = mrb_funcall(mrb, self, "create_game", 0);
 
   if (mrb->exc) { mrb_print_error(mrb); }
@@ -62,5 +75,9 @@ int EMSCRIPTEN_KEEPALIVE cleanupGame() {
 }
 
 int main() {
+  EM_ASM(
+    alert('in main()');
+  );
+
   return createGame();
 }

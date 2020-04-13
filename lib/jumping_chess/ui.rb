@@ -86,6 +86,8 @@ class HTMLUI < UI
       out << polyline(path, :black)
     end
 
+    DOM.createElement('table')
+
     out << "</svg>"
     out
   end
